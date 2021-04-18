@@ -35,6 +35,7 @@ function Login() {
         left
     );
     newWindow.addEventListener("load", getAcessTokenFromNewWindow, false);
+    newWindow.addEventListener("hashchange", getAcessTokenFromNewWindow, false);
     setNewWindow(newWindow);
   }, []);
 
@@ -46,27 +47,14 @@ function Login() {
     if (accessToken) {
       sessionStorage.setItem("accessToken", accessToken);
       event?.currentTarget?.close();
+      event?.stopPropagation();
       window.location.reload();
     }
   };
 
-  const getAcessToken = (event) => {
-    if (event.data) {
-      const hash = JSON.parse(event.data);
-      if (hash.type === "access_token") {
-        sessionStorage.setItem("accessToken", hash.access_token);
-
-        window.close();
-        window.location.reload();
-      }
-    }
-  };
-
   useEffect(() => {
-    window.addEventListener("message", getAcessToken, false);
-
     return function cleanup() {
-      window.removeEventListener("message", getAcessToken);
+      window.removeEventListener("hashchange", getAcessTokenFromNewWindow);
       newWindow?.removeEventListener("load", getAcessTokenFromNewWindow);
     };
   });
