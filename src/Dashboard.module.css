@@ -1,0 +1,4 @@
+.playlists{
+    display: flex;
+    flex-wrap: wrap;
+}
