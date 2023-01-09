@@ -20,16 +20,18 @@ function Dashboard() {
 
   useEffect(() => {
     initializePlaylists();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   return (
     
     <div className={styles.playlists}> 
-      {playlists.map((playlist) => (
+      {playlists.map((playlist,idx) => (
         <PlaylistTile
           name={playlist.name}
           image={playlist.images[0]}
           id={playlist.id}
+          key={idx}
           snapshotId={playlist.snapshot_id}
         />
       ))}
