@@ -23,6 +23,7 @@ function Playlist() {
 
     return mappedList;
   };
+
   const refresh = async () => {
     let currentSnapshotId = snaphshotId;
     let playlistTotal = playlistTracks.length;
@@ -32,7 +33,6 @@ function Playlist() {
       if (playlistTotal > oldTrack) {
         for await (let item of mappedList) {
           if (item.currentOrder > oldTrack) {
-            console.log(item.currentOrder);
             const { snapshot_id } = await reorderTrackInPlaylist(
               id,
               currentSnapshotId,
@@ -46,21 +46,6 @@ function Playlist() {
       }
     }
   };
-  //  if (playlistTracks.length > 0) {
-  //    console.log("Всего песен:" + playlistTracks.length);
-  //    playlistTracks.forEach((tracks, idx) =>
-  //      console.log(
-  //        "Название:" +
-  //          tracks.track.name +
-  //          "/" +
-  //          "Номер трека:" +
-  //          (idx + 1) +
-  //           "/" +
-  //          "Дата:" +
-  //          tracks.added_at
-  //      )
-  //    );
-  //  }
 
   const getTracks = async (offset, items) => {
     const playlistData = await getTracksFromPlaylist(id, offset);
