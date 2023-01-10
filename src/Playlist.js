@@ -24,6 +24,29 @@ function Playlist() {
     return mappedList;
   };
 
+  const refresh = async () => {
+    let currentSnapshotId = snaphshotId;
+    let playlistTotal = playlistTracks.length;
+    if (playlistTracks.length > 0) {
+      let mappedList = sortTracks(playlistTracks);
+      let oldTrack = mappedList[0].currentOrder;
+      if (playlistTotal > oldTrack) {
+        for await (let item of mappedList) {
+          if (item.currentOrder > oldTrack) {
+            const { snapshot_id } = await reorderTrackInPlaylist(
+              id,
+              currentSnapshotId,
+              item.currentOrder,
+              0,
+              1
+            );
+            currentSnapshotId = snapshot_id;
+          }
+        }
+      }
+    }
+  };
+
   const getTracks = async (offset, items) => {
     const playlistData = await getTracksFromPlaylist(id, offset);
     if (playlistData) {
@@ -51,8 +74,6 @@ function Playlist() {
         (newItem) => newItem.track.id === item.track.id
       );
       const index = currentTrack.currentOrder;
-
-      console.log(item.track.name);
       const { snapshot_id } = await reorderTrackInPlaylist(
         id,
         currentSnapshotId,
@@ -62,24 +83,28 @@ function Playlist() {
       );
       currentSnapshotId = snapshot_id;
       console.log(`${i++}/${playlistLength}`);
+      console.log(currentSnapshotId);
     }
   };
 
-  const initializeTracks = (async () => {
+  const initializeTracks = async () => {
     const tracks = await getTracks(0, []);
     setPlaylistTracks([...tracks]);
-  });
+  };
 
   useEffect(() => {
     initializeTracks();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div>
       <button onClick={() => shuffleTracks()}>Shuffle ALL</button>
+      <button onClick={() => refresh()}>Refresh</button>
       {playlistTracks.map((item) => (
-        <div key={`track-${item.track.id}-${item.track.name}`} style={{ color: item.progressed ? "green" : "red" }}>
+        <div
+          key={`track-${item.track.id}-${item.track.name}`}
+          style={{ color: item.progressed ? "green" : "red" }}
+        >
           {item.track.name}
         </div>
       ))}
