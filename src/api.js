@@ -20,7 +20,7 @@ export const reorderTrackInPlaylist = (
   snapshotId,
   rangeStart,
   insertBefore,
-  rangeLength = 1
+  rangeLength,
 ) =>
   fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
     method: "PUT",
@@ -35,6 +35,7 @@ export const reorderTrackInPlaylist = (
     }),
   })
     .then((response) => response.json());
+
     
 
 export const getPlaylist = (playlistId) =>
