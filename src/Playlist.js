@@ -30,9 +30,16 @@ function Playlist() {
     if (playlistTracks.length > 0) {
       let mappedList = sortTracks(playlistTracks);
       let oldTrack = mappedList[0].currentOrder;
+      let oldestAdded_at = mappedList[0].added_at;
+      let oldAndCurrentOrder = mappedList.filter(a => a.added_at === oldestAdded_at).reduce((a,b) => a.currentOrder > b.currentOrder ? a:b)
+      console.log(mappedList)
+      console.log(oldTrack)
+      console.log(oldestAdded_at)
+      console.log(oldAndCurrentOrder)
+      console.log(oldAndCurrentOrder.currentOrder)
       if (playlistTotal > oldTrack) {
         for await (let item of mappedList) {
-          if (item.currentOrder > oldTrack) {
+          if (item.currentOrder > oldAndCurrentOrder.currentOrder) {
             const { snapshot_id } = await reorderTrackInPlaylist(
               id,
               currentSnapshotId,
