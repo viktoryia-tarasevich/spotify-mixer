@@ -1,9 +1,16 @@
-export const getPlaylists = () =>
-  fetch("https://api.spotify.com/v1/me/playlists", {
+export const getPlaylists = (limit, offset) => {
+
+  const queryParams = new URLSearchParams({
+    limit: limit,
+    offset: offset
+  });
+
+ return  fetch(`https://api.spotify.com/v1/me/playlists?${queryParams}`, {
     headers: {
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken")
     },
   }).then((response) => response.json());
+}
 
 export const getTracksFromPlaylist = (playlistId, offset) =>
   fetch(
