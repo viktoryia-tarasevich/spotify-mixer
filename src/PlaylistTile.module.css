@@ -1,6 +1,6 @@
 .playlistTile{
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 200px;
     border: 1px solid black;
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
